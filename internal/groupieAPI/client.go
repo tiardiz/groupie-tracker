@@ -31,6 +31,10 @@ func GetLocations(id int) (ArtistLocations, error) {
 	return getFromAPI[ArtistLocations](id)
 }
 
+func IndexArtists() ([]Artist, error) {
+	return getFromAPI[[]Artist](0)
+}
+
 func getFromAPI[T availableAPI](id int) (result T, err error) {
 	var link string // link goes here
 	switch any(result).(type) {
@@ -42,10 +46,14 @@ func getFromAPI[T availableAPI](id int) (result T, err error) {
 		link = DatesLink
 	case Relation:
 		link = RelationsLink
+	case []Artist:
+		link = ArtistsLink
 	default:
 		return result, fmt.Errorf("unsupported type for API call")
 	}
-	link = link + "/" + strconv.Itoa(id)
+	if _, ok := any(result).([]Artist); !ok {
+		link += "/" + strconv.Itoa(id)
+	}
 	data, err := getData(link)
 	if err != nil {
 		return result, err
@@ -54,33 +62,17 @@ func getFromAPI[T availableAPI](id int) (result T, err error) {
 	return
 }
 
-func IndexArtists() (string, error) {
-	return getData(ArtistsLink)
-}
-
-func IndexDates() (string, error) {
-	return getData(DatesLink)
-}
-
-func IndexRelations() (string, error) {
-	return getData(RelationsLink)
-}
-
-func IndexLocations() (string, error) {
-	return getData(LocationsLink)
-}
-
-func getData(link string) (string, error) {
+func getData(link string) (result []byte, err error) {
 	response, err := http.Get(link)
 	if err != nil {
-		return "", err
+		return
 	}
 	defer response.Body.Close()
-	result, err := io.ReadAll(response.Body)
+	result, err = io.ReadAll(response.Body)
 	if err != nil {
-		return "", err
+		return
 	}
-	return string(result), nil
+	return result, nil
 }
 
 type Artist struct {
@@ -90,9 +82,6 @@ type Artist struct {
 	Members      []string `json:"members"`
 	CreationDate int      `json:"creationDate"`
 	FirstAlbum   string   `json:"firstAlbum"`
-	Locations    string   `json:"locations"`
-	ConcertDates string   `json:"concertDates"`
-	Relations    string   `json:"relations"`
 }
 
 type ArtistLocations struct {
@@ -112,5 +101,5 @@ type Relation struct {
 }
 
 type availableAPI interface {
-	Artist | ArtistLocations | ArtistDates | Relation
+	Artist | ArtistLocations | ArtistDates | Relation | []Artist
 }
