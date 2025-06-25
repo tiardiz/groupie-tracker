@@ -15,7 +15,23 @@ const (
 	RelationsLink = "https://groupietrackers.herokuapp.com/api/relation"
 )
 
-func GetFromAPI[T availableAPI](id int) (result T, err error) {
+func GetArtist(id int) (Artist, error) {
+	return getFromAPI[Artist](id)
+}
+
+func GetDates(id int) (ArtistDates, error) {
+	return getFromAPI[ArtistDates](id)
+}
+
+func GetRelation(id int) (Relation, error) {
+	return getFromAPI[Relation](id)
+}
+
+func GetLocations(id int) (ArtistLocations, error) {
+	return getFromAPI[ArtistLocations](id)
+}
+
+func getFromAPI[T availableAPI](id int) (result T, err error) {
 	var link string // link goes here
 	switch any(result).(type) {
 	case Artist:
@@ -36,10 +52,6 @@ func GetFromAPI[T availableAPI](id int) (result T, err error) {
 	}
 	err = json.Unmarshal([]byte(data), &result)
 	return
-}
-
-func GetArtist(id int) (Artist, error) {
-	return GetFromAPI[Artist](id)
 }
 
 func IndexArtists() (string, error) {
