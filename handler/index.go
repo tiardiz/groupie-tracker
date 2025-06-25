@@ -6,6 +6,13 @@ import (
 	"net/http"
 )
 
+const (
+	ArtistsLink   = "https://groupietrackers.herokuapp.com/api/artists"
+	LocationsLink = "https://groupietrackers.herokuapp.com/api/locations"
+	DatesLink     = "https://groupietrackers.herokuapp.com/api/dates"
+	RelationsLink = "https://groupietrackers.herokuapp.com/api/relation"
+)
+
 type Artist struct {
 	ID      int      `json:"id"`
 	Image   string   `json:"image"`
@@ -19,7 +26,7 @@ func MainHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp, err := http.Get("https://groupietrackers.herokuapp.com/api/artists")
+	resp, err := http.Get(ArtistsLink)
 	if err != nil {
 		InternalServerErrorHandler(w, r)
 		return
