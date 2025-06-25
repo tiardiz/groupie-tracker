@@ -1,0 +1,28 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    height: 100%;
+    margin: 0;
+}
+
+.fullscreen-img {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: -1;
+}
+
+.text-overlay {
+  position: absolute;
+  top: 70vh;
+  width: 100%;
+  color: white;
+  text-align: center;
+  z-index: 1;
+  font-size: 15px;
+}
+
