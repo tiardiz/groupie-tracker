@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Error {{.Code}}</title>
+  <link rel ="icon" href="/static/favicon.ico">
+  <link rel="stylesheet" href="/static/index.css">
+</head>
+<body>
+  <img src="/static/error.png" alt="Ошибка" class="fullscreen-img">
+   <div class="text-overlay">
+
+     <h1>Error {{.Code}}: {{.Message}} </h1>
+     <p>You shouldn't be here. Go <a href="/">home</a>!</p>
+   </div>
+</body>
+</html>
