@@ -1,31 +1,32 @@
 package main
 
 import (
+	"errors"
+	"groupietracker/handler"
 	"log"
 	"net/http"
-	"text/template"
+	"os"
 )
 
-var tmpl *template.Template
-
 func main() {
-	var err error
-	tmpl, err = template.ParseFiles("templates/index.html")
+	err := handler.InitTemplates()
 	if err != nil {
-		log.Fatalf("Error loading: %v", err)
+		log.Fatalf("error: %v", err)
 	}
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		err := tmpl.Execute(w, nil)
-		if err != nil {
-			http.Error(w, "Error rendering template", http.StatusInternalServerError)
-			log.Println("Template execute error:", err)
+	http.HandleFunc("/", handler.MainHandler)
+	http.HandleFunc("/info", handler.InfoHandler)
+
+	http.HandleFunc("/static/", func(w http.ResponseWriter, r *http.Request) {
+		path := r.URL.Path[len("/static/"):]
+		_, err := os.Stat(r.URL.Path[1:])
+		if path == "" || errors.Is(err, os.ErrNotExist) {
+			handler.NotFoundHandler(w, r)
+			return
 		}
+		http.StripPrefix("/static/", http.FileServer(http.Dir("static"))).ServeHTTP(w, r)
 	})
 
-	log.Println("Сервер запущен на : http://localhost:8080/")
-	err = http.ListenAndServe(":8080", nil)
-	if err != nil {
-		log.Fatalf("Ошибка запуска сервера: %v", err)
-	}
+	log.Println("Server running on http://localhost:8080")
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }

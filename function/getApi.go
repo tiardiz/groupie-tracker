@@ -1,4 +1,4 @@
-package functions
+package function
 
 const (
 	ArtistsLink   = "https://groupietrackers.herokuapp.com/api/artists"
