@@ -6,5 +6,7 @@ import (
 )
 
 func main() {
-	fmt.Println(groupieapi.GetArtistsJson())
+	artist, _ := groupieapi.GetFromAPI[groupieapi.ArtistDates](5)
+	location, _ := groupieapi.GetFromAPI[groupieapi.ArtistLocations](5)
+	fmt.Printf("%#v\n%#v\n", artist, location)
 }

@@ -1,34 +1,64 @@
 package groupieapi
 
 import (
+	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
+	"strconv"
 )
 
 const (
-	Artists   = "https://groupietrackers.herokuapp.com/api/artists"
-	Locations = "https://groupietrackers.herokuapp.com/api/locations"
-	Dates     = "https://groupietrackers.herokuapp.com/api/dates"
-	Relation  = "https://groupietrackers.herokuapp.com/api/relation"
+	ArtistsLink   = "https://groupietrackers.herokuapp.com/api/artists"
+	LocationsLink = "https://groupietrackers.herokuapp.com/api/locations"
+	DatesLink     = "https://groupietrackers.herokuapp.com/api/dates"
+	RelationsLink = "https://groupietrackers.herokuapp.com/api/relation"
 )
 
-func GetArtistsJson() (string, error) {
-	return GetAPI(Artists)
+func GetFromAPI[T availableAPI](id int) (result T, err error) {
+	var link string // link goes here
+	switch any(result).(type) {
+	case Artist:
+		link = ArtistsLink
+	case ArtistLocations:
+		link = LocationsLink
+	case ArtistDates:
+		link = DatesLink
+	case Relation:
+		link = RelationsLink
+	default:
+		return result, fmt.Errorf("unsupported type for API call")
+	}
+	link = link + "/" + strconv.Itoa(id)
+	data, err := getData(link)
+	if err != nil {
+		return result, err
+	}
+	err = json.Unmarshal([]byte(data), &result)
+	return
 }
 
-func GetDatesJson() (string, error) {
-	return GetAPI(Dates)
+func GetArtist(id int) (Artist, error) {
+	return GetFromAPI[Artist](id)
 }
 
-func GetRelationJson() (string, error) {
-	return GetAPI(Relation)
+func IndexArtists() (string, error) {
+	return getData(ArtistsLink)
 }
 
-func GetLocationsJson() (string, error) {
-	return GetAPI(Locations)
+func IndexDates() (string, error) {
+	return getData(DatesLink)
 }
 
-func GetAPI(link string) (string, error) {
+func IndexRelations() (string, error) {
+	return getData(RelationsLink)
+}
+
+func IndexLocations() (string, error) {
+	return getData(LocationsLink)
+}
+
+func getData(link string) (string, error) {
 	response, err := http.Get(link)
 	if err != nil {
 		return "", err
@@ -39,4 +69,36 @@ func GetAPI(link string) (string, error) {
 		return "", err
 	}
 	return string(result), nil
+}
+
+type Artist struct {
+	ID           int      `json:"id"`
+	Image        string   `json:"image"`
+	Name         string   `json:"name"`
+	Members      []string `json:"members"`
+	CreationDate int      `json:"creationDate"`
+	FirstAlbum   string   `json:"firstAlbum"`
+	Locations    string   `json:"locations"`
+	ConcertDates string   `json:"concertDates"`
+	Relations    string   `json:"relations"`
+}
+
+type ArtistLocations struct {
+	ID        int      `json:"id"`
+	Locations []string `json:"locations"`
+	Dates     string   `json:"dates"`
+}
+
+type ArtistDates struct {
+	ID    int      `json:"id"`
+	Dates []string `json:"dates"`
+}
+
+type Relation struct {
+	ID             int                 `json:"id"`
+	DatesLocations map[string][]string `json:"datesLocations"`
+}
+
+type availableAPI interface {
+	Artist | ArtistLocations | ArtistDates | Relation
 }
