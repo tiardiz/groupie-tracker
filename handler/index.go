@@ -20,6 +20,8 @@ type Artist struct {
 	Members []string `json:"members"`
 }
 
+var artists []Artist
+
 func MainHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		MethodNotAllowedHandler(w, r)
@@ -33,7 +35,6 @@ func MainHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer resp.Body.Close()
 
-	var artists []Artist
 	if err := json.NewDecoder(resp.Body).Decode(&artists); err != nil {
 		InternalServerErrorHandler(w, r)
 		return
@@ -43,4 +44,6 @@ func MainHandler(w http.ResponseWriter, r *http.Request) {
 	if err := tmpl.Execute(w, artists); err != nil {
 		InternalServerErrorHandler(w, r)
 	}
+	// fmt.Println(artists)
+	// fmt.Println(artists[0])
 }

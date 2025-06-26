@@ -15,7 +15,7 @@ func main() {
 	}
 
 	http.HandleFunc("/", handler.MainHandler)
-	http.HandleFunc("/info", handler.InfoHandler)
+	http.HandleFunc("/info/", handler.InfoHandler)
 
 	http.HandleFunc("/static/", func(w http.ResponseWriter, r *http.Request) {
 		path := r.URL.Path[len("/static/"):]
