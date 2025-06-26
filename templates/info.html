@@ -15,19 +15,31 @@
 
         </a>
   </div>
-  <div class="card w-72 rounded overflow-hidden shadow-lg bg-white hover:shadow-xl transition duration-300 cursor-pointer">
+  <div class="card w-[75%] rounded overflow-hidden shadow-lg bg-white hover:shadow-xl transition duration-300 cursor-pointer">
     <!-- info suda -->
     <div class="flex justify-center">
       <div>
 
         <!-- artists: image -->
-        <img class="w-full h-48 object-cover" src="{{.Image}}" alt="{{.Name}}">
+        <img class="w-full h-[30%] object-cover" src="{{.Image}}" alt="{{.Name}}">
         <!-- artists: name -->
         <div class="px-6 py-4 border-t">
           <h2 class="text-lg font-semibold text-gray-900">{{.Name}}</h2>
         </div>
         <div class="flex space-x-4">
-    <div class="w-1/2 bg-blue-100 p-4">Левая колонка: artists: members, creationDate, firstAlbum</div>
+    <div class="w-1/2 bg-blue-100 p-4">Левая колонка: artists: members, creationDate, firstAlbum
+       <h3 class="text-md font-semibold text-gray-800 mb-2">Участники:</h3>
+  <ul class="list-disc list-inside text-gray-700">
+    {{range .Members}}
+      <li>{{.}}</li>
+    {{end}}
+  </ul>
+  <h3 class="text-md font-semibold text-gray-800 mt-4 mb-2">Год основания:</h3>
+  <p class="text-gray-700">{{.CreationDate}}</p>
+
+  <h3 class="text-md font-semibold text-gray-800 mt-4 mb-2">Первый альбом:</h3>
+  <p class="text-gray-700">{{.FirstAlbum}}</p>
+    </div>
     <div class="w-1/2 bg-green-100 p-4">Правая колонка: tours: relations: datesLocations</div>
   </div>
           <!-- artists: members, creationDate, firstAlbum -->
