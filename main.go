@@ -14,6 +14,15 @@ func main() {
 		log.Fatalf("error: %v", err)
 	}
 
+	// tmpl, err = template.ParseFiles("templates/index.html")
+	// if err != nil {
+	// 	log.Fatalf("Error loading: %v", err)
+	// }
+	// tmplError, err = template.ParseFiles("templates/error.html")
+	// if err != nil {
+	// 	log.Fatalf("Error loading error template: %v", err)
+	// }
+
 	http.HandleFunc("/", handler.MainHandler)
 	http.HandleFunc("/info/", handler.InfoHandler)
 
@@ -25,6 +34,10 @@ func main() {
 			return
 		}
 		http.StripPrefix("/static/", http.FileServer(http.Dir("static"))).ServeHTTP(w, r)
+	})
+
+	http.HandleFunc("/test500", func(w http.ResponseWriter, r *http.Request) {
+		handler.InternalServerErrorHandler(w, r)
 	})
 
 	log.Println("Server running on http://localhost:8080")

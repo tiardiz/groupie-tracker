@@ -15,7 +15,7 @@
   </div>
 
   <div class="flex flex-wrap justify-center p-4 gap-4" id="card-container">
-    {{range .}}
+    {{range .Artist}}
     <div class="card w-72 rounded overflow-hidden shadow-lg bg-white hover:shadow-xl transition duration-300 cursor-pointer">
       <a href="/info/{{.ID}}" class="block max-w-sm rounded overflow-hidden shadow-lg bg-white hover:shadow-xl transition-shadow duration-300">
         <img class="w-full h-48 object-cover" src="{{.Image}}" alt="{{.Name}}">
