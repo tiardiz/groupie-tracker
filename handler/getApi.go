@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 )
 
@@ -11,8 +12,6 @@ const (
 	DatesLink     = "https://groupietrackers.herokuapp.com/api/dates"
 	RelationsLink = "https://groupietrackers.herokuapp.com/api/relation"
 )
-
-// var artists []Artist
 
 type Artist struct {
 	ID           int      `json:"id"`
@@ -45,18 +44,16 @@ type PageData struct {
 	Locations []Locations
 }
 
-// var pageData PageData
-
 func FetchArtists() ([]Artist, error) {
 	resp, err := http.Get(ArtistsLink)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("cannot get artists: %w", err)
 	}
 	defer resp.Body.Close()
 
 	var artists []Artist
 	if err := json.NewDecoder(resp.Body).Decode(&artists); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("cannot fetch artists: %w", err)
 	}
 	return artists, nil
 }
@@ -68,13 +65,13 @@ type LocationsResponse struct {
 func FetchLocations() ([]Locations, error) {
 	resp, err := http.Get(LocationsLink)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("cannot get locations: %w", err)
 	}
 	defer resp.Body.Close()
 
 	var locResp LocationsResponse
 	if err := json.NewDecoder(resp.Body).Decode(&locResp); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("cannot fetch locations: %w", err)
 	}
 	return locResp.Index, nil
 }
@@ -86,12 +83,12 @@ type DatesResponse struct {
 func FetchDates() ([]Dates, error) {
 	resp, err := http.Get(DatesLink)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("cannot get dates: %w", err)
 	}
 	defer resp.Body.Close()
 	var datesResp DatesResponse
 	if err := json.NewDecoder(resp.Body).Decode(&datesResp); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("cannot fetch dates: %w", err)
 	}
 	return datesResp.Index, nil
 }
@@ -103,13 +100,13 @@ type RelationResponse struct {
 func FetchRelations() ([]Relation, error) {
 	resp, err := http.Get(RelationsLink)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("cannot get relations: %w", err)
 	}
 	defer resp.Body.Close()
 
 	var relResp RelationResponse
 	if err := json.NewDecoder(resp.Body).Decode(&relResp); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("cannot fetch relations: %w", err)
 	}
 	return relResp.Index, nil
 }

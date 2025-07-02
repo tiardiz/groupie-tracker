@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"errors"
 	"html/template"
 	"net/http"
 	"strconv"
@@ -8,27 +9,31 @@ import (
 )
 
 func InfoHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		MethodNotAllowedHandler(w, r, errors.New(r.Method+"method not allowed"))
+		return
+	}
 	tmpl := template.Must(template.ParseFiles("templates/info.html"))
 
 	path := r.URL.Path // "/info/1"
 
 	parts := strings.Split(path, "/") // ["", "info", "1"]
 	if len(parts) < 3 || parts[2] == "" {
-		NotFoundHandler(w, r)
+		err := errors.New("page not found")
+		NotFoundHandler(w, r, err)
 		return
 	}
 
 	idStr := parts[2]
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
-		NotFoundHandler(w, r)
+		NotFoundHandler(w, r, err)
 		return
 	}
 
 	pageData, err := GetPageData()
 	if err != nil {
-		// fmt.Println("error here 3", err)
-		InternalServerErrorHandler(w, r)
+		InternalServerErrorHandler(w, r, err)
 		return
 	}
 
@@ -41,7 +46,8 @@ func InfoHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if selected == nil {
-		NotFoundHandler(w, r)
+		err := errors.New("page not found")
+		NotFoundHandler(w, r, err)
 		return
 	}
 
@@ -80,10 +86,8 @@ func InfoHandler(w http.ResponseWriter, r *http.Request) {
 		Dates:     dateForArtistSlice,
 	}
 
-	// fmt.Println(infoData.Locations)
-
 	err = tmpl.Execute(w, infoData)
 	if err != nil {
-		InternalServerErrorHandler(w, r)
+		InternalServerErrorHandler(w, r, err)
 	}
 }

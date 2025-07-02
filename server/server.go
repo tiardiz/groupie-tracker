@@ -14,9 +14,9 @@ func RouteHandler(w http.ResponseWriter, r *http.Request) {
 	case "/":
 		handler.MainHandler(w, r)
 	case "/test500":
-		handler.InternalServerErrorHandler(w, r)
+		handler.InternalServerErrorHandler(w, r, errors.New(r.Method+" testing error 500"))
 	default:
-		handler.NotFoundHandler(w, r)
+		handler.NotFoundHandler(w, r, errors.New("page not found"))
 	}
 }
 
@@ -26,15 +26,13 @@ func Start() {
 		log.Fatalf("error: %v", err)
 	}
 
-	http.HandleFunc("/info/", func(w http.ResponseWriter, r *http.Request) {
-		handler.InfoHandler(w, r)
-	})
+	http.HandleFunc("/info/", handler.InfoHandler)
 
 	http.HandleFunc("/static/", func(w http.ResponseWriter, r *http.Request) {
 		path := r.URL.Path[len("/static/"):]
 		_, err := os.Stat(r.URL.Path[1:])
 		if path == "" || errors.Is(err, os.ErrNotExist) {
-			handler.NotFoundHandler(w, r)
+			handler.NotFoundHandler(w, r, err)
 			return
 		}
 		http.StripPrefix("/static/", http.FileServer(http.Dir("static"))).ServeHTTP(w, r)
