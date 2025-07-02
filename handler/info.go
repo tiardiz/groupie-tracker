@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"html/template"
 	"net/http"
 	"strconv"
@@ -9,8 +8,7 @@ import (
 )
 
 func InfoHandler(w http.ResponseWriter, r *http.Request) {
-
-	var tmpl = template.Must(template.ParseFiles("templates/info.html"))
+	tmpl := template.Must(template.ParseFiles("templates/info.html"))
 
 	path := r.URL.Path // "/info/1"
 
@@ -29,7 +27,7 @@ func InfoHandler(w http.ResponseWriter, r *http.Request) {
 
 	pageData, err := GetPageData()
 	if err != nil {
-		fmt.Println("error here 3", err)
+		// fmt.Println("error here 3", err)
 		InternalServerErrorHandler(w, r)
 		return
 	}
@@ -47,6 +45,7 @@ func InfoHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// relation
 	var relForArtist []Relation
 	for _, rel := range pageData.Relations {
 		if rel.ID == selected.ID {
@@ -81,7 +80,7 @@ func InfoHandler(w http.ResponseWriter, r *http.Request) {
 		Dates:     dateForArtistSlice,
 	}
 
-	fmt.Println(infoData.Locations)
+	// fmt.Println(infoData.Locations)
 
 	err = tmpl.Execute(w, infoData)
 	if err != nil {

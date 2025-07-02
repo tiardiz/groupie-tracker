@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"html/template"
 	"net/http"
 )
@@ -14,15 +13,15 @@ func MainHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	pageData, err := GetPageData()
-	//fmt.Println(pageData)
+	// fmt.Println(pageData)
 	if err != nil {
-		fmt.Println("error here 2", err)
+		// fmt.Println("error here 2", err)
 		InternalServerErrorHandler(w, r)
 		return
 	}
 	tmpl = template.Must(template.ParseFiles("templates/index.html"))
 	if err := tmpl.Execute(w, pageData); err != nil {
-		fmt.Println("error here!")
+		// fmt.Println("error here!")
 		InternalServerErrorHandler(w, r)
 		return
 	}
