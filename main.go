@@ -1,7 +1,7 @@
 package main
 
 import (
-	"groupietracker/templates/server"
+	"groupietracker/server"
 )
 
 func main() {
