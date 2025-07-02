@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Groupie Tracker</title>
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="hero-background">
+        <h1 class="hero-title">Groupie-tracker</h1>
+      </div>
+    </header>
+    <div class="artist-list">
+      {{if .}} {{range .}}
+      <div class="artist-card">
+        <a href="/artist/{{.ID}}" class="details-link">
+          <div class="image-wrapper">
+            <img src="{{.Image}}" alt="{{.Name}}" class="artist-image" />
+          </div>
+          <h2>{{.Name}}</h2>
+        </a>
+      </div>
+      {{end}} {{else}}
+      <p>No artists found.</p>
+      {{end}}
+    </div>
+  </body>
+</html>

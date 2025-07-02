@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Artist.Name}}</title>
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header>
+        <h1>{{.Artist.Name}}</h1>
+        <a href="/" class="back-link">Back to Artists</a>
+    </header>
+<main class="artist-page">
+    <div class="artist-grid">
+        <div class="grid-item" style="display: flex; align-items: center; gap: 20px;">
+            <img src="{{.Artist.Image}}" alt="{{.Artist.Name}}" class="artist-image" style="max-width: 280px; border-radius: 8px;">
+            <div>
+                <p><strong>Creation Date:</strong> {{.Artist.CreationDate}}</p>
+                <p><strong>First Album:</strong> {{.Artist.FirstAlbum}}</p>
+            </div>
+        </div>
+    </div>
+</main>
+        <div class="grid-item">
+            <h2>Members</h2>
+            <ul class="members-list">
+                {{range .Artist.Members}}
+                <li>{{.}}</li>
+                {{end}}
+            </ul>
+        </div>
+
+        <div class="grid-item">
+            <h2>Concert Locations</h2>
+            {{if .Locations.Locations}}
+            <ul class="location-list">
+                {{range .Locations.Locations}}
+                <li>{{.}}</li>
+                {{end}}
+            </ul>
+            {{else}}<p>No locations available.</p>{{end}}
+        </div>
+
+        <div class="grid-item">
+            <h2>Concert Dates</h2>
+            {{if .Dates.Dates}}
+            <ul class="date-list">
+                {{range .Dates.Dates}}
+                <li>{{.}}</li>
+                {{end}}
+            </ul>
+            {{else}}<p>No dates available.</p>{{end}}
+        </div>
+
+        <div class="grid-item">
+            <h2>Concert Dates and Locations</h2>
+            {{if .Relations.DatesLocations}}
+            <div class="concert-list">
+                {{range $location, $dates := .Relations.DatesLocations}}
+                <div class="concert-location">
+                    <h3>{{$location}}</h3>
+                    <ul>
+                        {{range $dates}}
+                        <li>{{.}}</li>
+                        {{end}}
+                    </ul>
+                </div>
+                {{end}}
+            </div>
+            {{else}}<p>No concert dates or locations available.</p>{{end}}
+        </div>
+    </div>
+</main>
+    <script src="/static/script.js"></script>
+</body>
+</html>

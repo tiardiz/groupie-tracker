@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Error {{ .ErrorCode }}</title>
+    <link rel="stylesheet" href="/static/css/styles.css" />
+  </head>
+  <body>
+    <div class="error-container">
+      <h1>Oops! Something went wrong 😢</h1>
+
+      <div class="error-box">
+        <div class="error-code">Error {{ .ErrorCode }}</div>
+        <div class="error-message">{{ .ErrorMessage | html }}</div>
+      </div>
+
+      <p class="error-hint">
+        Something went wrong.<br />
+        Please try again or return to the home page.
+      </p>
+
+      <a href="/" class="home-button">← Return to Home</a>
+    </div>
+  </body>
+</html>

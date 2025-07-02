@@ -1,11 +1,23 @@
 package main
 
 import (
-	"fmt"
-	groupieapi "groupie-tracker/internal/groupieAPI"
+	"groupie-tracker/internal/handlers"
+	"groupie-tracker/internal/helpers"
+	"log"
+	"net/http"
 )
 
 func main() {
-	index, err := groupieapi.IndexArtists()
-	fmt.Println(index, err)
+	if err := helpers.ChangeDirProjectRoot(); err != nil {
+		log.Fatal(err)
+	}
+	http.HandleFunc("GET /", handlers.HandleHome)
+	http.HandleFunc("GET /artist/", handlers.HandleArtist)
+	log.Println("Starting server at", port)
+	err := http.ListenAndServe(port, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
+
+const port = ":8080"
