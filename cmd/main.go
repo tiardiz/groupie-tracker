@@ -11,9 +11,11 @@ func main() {
 	if err := helpers.ChangeDirProjectRoot(); err != nil {
 		log.Fatal(err)
 	}
-	http.HandleFunc("GET /", handlers.HandleHome)
-	http.HandleFunc("GET /artist/", handlers.HandleArtist)
-	log.Println("Starting server at", port)
+	fs := http.FileServer(http.Dir("frontend/static"))
+	http.HandleFunc("/", handlers.HandleHome)
+	http.HandleFunc("/artist/", handlers.HandleArtist)
+	http.Handle("/static/", http.StripPrefix("/static/", fs))
+	log.Println("Starting server at", IP+port)
 	err := http.ListenAndServe(port, nil)
 	if err != nil {
 		log.Fatal(err)
@@ -21,3 +23,4 @@ func main() {
 }
 
 const port = ":8080"
+const IP = "localhost"

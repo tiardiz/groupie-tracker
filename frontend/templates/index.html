@@ -3,25 +3,47 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>Groupie Tracker</title>
     <link rel="icon" href="/static/favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="/static/style.css" />
   </head>
-  <body>
-    <header>
-      <div class="hero-background">
-        <h1 class="hero-title">Groupie-tracker</h1>
+  <body class="bg-gray-100">
+    <header
+      id="hero"
+      class="w-full h-[45vh] bg-cover bg-center transition-all duration-500 top-0 z-50"
+    >
+      <div class="flex items-center justify-center h-full bg-black/50">
+        <h1
+          id="hero-title"
+          class="text-5xl font-bold text-white transition-all duration-500"
+        >
+          Groupie-tracker
+        </h1>
       </div>
     </header>
-    <div class="artist-list">
+
+    <div class="artist-list flex flex-wrap justify-center p-4 gap-4">
       {{if .}} {{range .}}
-      <div class="artist-card">
-        <a href="/artist/{{.ID}}" class="details-link">
-          <div class="image-wrapper">
-            <img src="{{.Image}}" alt="{{.Name}}" class="artist-image" />
+      <div
+        class="artist-card w-72 rounded overflow-hidden shadow-lg bg-white hover:shadow-xl transition duration-300 cursor-pointer flex flex-col items-center"
+      >
+        <a
+          href="/artist/{{.ID}}"
+          class="details-link block w-full rounded overflow-hidden bg-white hover:shadow-xl transition-shadow duration-300 flex flex-col items-center"
+        >
+          <div
+            class="image-wrapper w-full h-48 flex items-center justify-center"
+          >
+            <img
+              src="{{.Image}}"
+              alt="{{.Name}}"
+              class="artist-image object-contain max-h-full max-w-full mx-auto"
+            />
           </div>
-          <h2>{{.Name}}</h2>
+          <h2 class="text-lg font-semibold text-gray-900 mt-2 text-center">
+            {{.Name}}
+          </h2>
         </a>
       </div>
       {{end}} {{else}}
