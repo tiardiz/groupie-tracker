@@ -15,7 +15,7 @@ func main() {
 	http.HandleFunc("/", handlers.HandleHome)
 	http.HandleFunc("/artist/", handlers.HandleArtist)
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
-	log.Println("Starting server at", IP+port)
+	log.Println("Starting server at", link+port)
 	err := http.ListenAndServe(port, nil)
 	if err != nil {
 		log.Fatal(err)
@@ -23,4 +23,4 @@ func main() {
 }
 
 const port = ":8080"
-const IP = "localhost"
+const link = "https://localhost"
