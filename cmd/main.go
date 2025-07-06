@@ -23,4 +23,4 @@ func main() {
 }
 
 const port = ":8080"
-const link = "https://localhost"
+const link = "http://localhost"
