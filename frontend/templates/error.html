@@ -4,36 +4,15 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>{{.ErrorCode}}</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-      #notfound {
-        /* margin-top: calc(50vh - 75px - 6em);
-        text-align: center; */
-      }
-      #notfound h1 {
-        /* font-size: 4em;
-        margin: 0; */
-      }
-      #notfound p {
-        /* font-size: 1.5em;
-        margin: 0; */
-      }
-      #notfound p a {
-        /* text-decoration: none;
-        transition: 0.3s color; */
-      }
-      #notfound p a:hover {
-        color: #fff;
-      }
-    </style>
   </head>
-  <body class="bg-gray-100 min-h-screen flex items-center justify-center">
-    <div id="notfound" class="w-full max-w-xl mx-auto flex flex-col items-center justify-center py-8 px-4">
-      <img class="mx-auto w-40 sm:w-56 md:w-64 lg:w-72" src={{if eq .ErrorCode 500
+  <body >
+    <div id="notfound" >
+      <img  src={{if eq .ErrorCode 500
       }}"/static/internalerror.gif"{{else}}"/static/error.gif"{{end}}/>
-      <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mt-6 mb-4 text-gray-800">{{.ErrorMessage}}</h1>
-      <p class="text-base sm:text-lg md:text-xl text-gray-600 text-center">
+      <h1 >{{.ErrorMessage}}</h1>
+      <p >
         <br />I can't point you in the right direction, but I can at least bring
-        you back <a href="http://localhost:8080/" class="text-green-700 hover:text-white underline transition-colors">home</a>.
+        you back <a href="http://localhost:8080/" >home</a>.
       </p>
     </div>
   </body>
