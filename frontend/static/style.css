@@ -1,3 +1,11 @@
 #hero {
   background-image: url("/static/header-bg.jpg");
 }
+
+.studio-bg {
+  background-image: url("/static/background.webp");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: bottom;
+}
