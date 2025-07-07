@@ -14,6 +14,10 @@ func HandleHome(w http.ResponseWriter, r *http.Request) {
 		HandleError(w, 404, "Page not found")
 		return
 	}
+	if r.Method != http.MethodGet {
+		HandleError(w, 405, "Method not allowed")
+		return
+	}
 	artists, err := groupieapi.IndexArtists()
 	if err != nil {
 		log.Println(err)
@@ -24,6 +28,10 @@ func HandleHome(w http.ResponseWriter, r *http.Request) {
 }
 
 func HandleArtist(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		HandleError(w, 405, "Method not allowed")
+		return
+	}
 	path := strings.Trim(r.URL.Path, "/")
 	parts := strings.Split(path, "/")
 	if !(len(parts) == 2 && parts[0] == "artist") {
