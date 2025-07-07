@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"errors"
 	groupieapi "groupie-tracker/internal/groupieAPI"
 	"log"
 	"net/http"
@@ -33,27 +32,29 @@ func HandleArtist(w http.ResponseWriter, r *http.Request) {
 	}
 	idString := parts[1]
 	id, err := strconv.Atoi(idString)
-	if errors.Is(err, strconv.ErrRange) {
+	if err != nil {
 		HandleError(w, 404, "Artist not found")
 		return
-	} else if errors.Is(err, strconv.ErrSyntax) {
-		HandleError(w, 400, "Artist ID must be a number")
+	}
+	data, errorChannel := groupieapi.BundleArtistData(id)
+	if groupieapi.ArtistNotFound(data.Artist) {
+		HandleError(w, 404, "Artist not found")
 		return
 	}
-
-	data, errors := groupieapi.BundleArtistData(id)
-	for len(errors) > 0 {
-		err = <-errors
+	for len(errorChannel) > 0 {
+		err = <-errorChannel
 		if err != nil {
 			log.Println(err)
 		}
 	}
 	if err != nil {
-		HandleError(w, 404, "Artist not found")
+		HandleError(w, 500, "Internal server error")
 		return
 	}
 	if err = artistTemplate.Execute(w, data); err != nil {
 		log.Println(err)
+		HandleError(w, 500, "Internal server error")
+		return
 	}
 }
 

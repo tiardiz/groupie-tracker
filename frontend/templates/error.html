@@ -1,22 +1,25 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{.ErrorCode}}</title>
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
-  <body >
-    <div id="notfound" >
-      <img  src={{if eq .ErrorCode 500
-      }}"/static/internalerror.gif"{{else}}"/static/error.gif"{{end}}/>
-      <h1 >{{.ErrorMessage}}</h1>
-      <p >
-        <br />I can't point you in the right direction, but I can at least bring
-        you back <a href="http://localhost:8080/" >home</a>.
-      </p>
-    </div>
-  </body>
-</html>
+  <body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white rounded-lg shadow-lg text-center p-10 max-w-md mx-4">
+      <img
+        src="{{if eq .ErrorCode 500}}/static/internalerror.gif{{else}}/static/error.gif{{end}}"
+        alt="Error {{.ErrorCode}}"
+        class="mx-auto mb-6 max-w-md w-full object-contain"
+      />
+      <h1 class="text-4xl font-bold mb-4 text-gray-800">{{.ErrorMessage}}</h1>
+      <p class="text-gray-600 mb-6">
+        I can't point you in the right direction, but I can at least bring you
+        back
+        <a href="/" class="text-blue-600 hover:text-blue-800 font-medium"
+          >home</a
+        >.
       </p>
     </div>
   </body>

@@ -18,7 +18,11 @@ const (
 )
 
 func GetArtist(id int) (Artist, error) {
-	return getFromAPI[Artist](id)
+	artist, err := getFromAPI[Artist](id)
+	if ArtistNotFound(artist) {
+		return artist, ErrArtistNotFound
+	}
+	return artist, err
 }
 
 func GetDates(id int) (ArtistDates, error) {
@@ -71,7 +75,12 @@ func getFromAPI[T HasAPI](id int) (result T, err error) {
 	return
 }
 
+func ArtistNotFound(artist Artist) bool {
+	return artist.ID == 0 || artist.CreationDate == 0 || artist.FirstAlbum == "" || len(artist.Members) == 0 || artist.Name == ""
+}
+
 var ErrUnsupportedAPI = errors.New("unsupported type of api call")
+var ErrArtistNotFound = errors.New("artist not found")
 
 func getData(link string) (result []byte, err error) {
 	response, err := http.Get(link)
