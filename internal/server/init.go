@@ -20,6 +20,7 @@ func Init(link, port string) {
 	http.HandleFunc("/", handlers.HandleHome)
 	http.HandleFunc("/artist/", handlers.HandleArtist)
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
+
 	addr := link + port
 	log.Println("Starting server at", addr)
 	err := http.ListenAndServe(port, nil)
