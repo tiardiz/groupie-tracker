@@ -15,13 +15,21 @@ func BundleArtistData(id int) (artistDataBundle, chan error) {
 	errChan := make(chan error, 4)
 	go asyncGetData(id, artistChan, errChan)
 	go asyncGetData(id, locationsChan, errChan)
-	go asyncGetData(id, datesChan, errChan)
+	go func() {
+		dates, err := GetDates(id)
+		if err != nil {
+			errChan <- err
+		}
+		datesChan <- dates
+	}()
 	go asyncGetData(id, relationChan, errChan)
 	return artistDataBundle{<-artistChan, <-locationsChan, <-datesChan, <-relationChan}, errChan
 }
 
 func asyncGetData[T HasAPI](id int, channel chan T, errChan chan error) {
 	data, err := getFromAPI[T](id)
-	errChan <- err
+	if err != nil {
+		errChan <- err
+	}
 	channel <- data
 }
