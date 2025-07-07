@@ -34,11 +34,21 @@ func GetDates(id int) (ArtistDates, error) {
 }
 
 func GetRelation(id int) (Relation, error) {
-	return getFromAPI[Relation](id)
+	data, err := getFromAPI[Relation](id)
+	newMap := make(map[string][]string, len(data.DatesLocations))
+	for location, dates := range data.DatesLocations {
+		newMap[normalizeLocation(location)] = dates
+	}
+	data.DatesLocations = newMap
+	return data, err
 }
 
 func GetLocations(id int) (ArtistLocations, error) {
-	return getFromAPI[ArtistLocations](id)
+	data, err := getFromAPI[ArtistLocations](id)
+	for i, loc := range data.Locations {
+		data.Locations[i] = normalizeLocation(loc)
+	}
+	return data, err
 }
 
 func IndexArtists() ([]Artist, error) {
@@ -79,9 +89,6 @@ func ArtistNotFound(artist Artist) bool {
 	return artist.ID == 0 || artist.CreationDate == 0 || artist.FirstAlbum == "" || len(artist.Members) == 0 || artist.Name == ""
 }
 
-var ErrUnsupportedAPI = errors.New("unsupported type of api call")
-var ErrArtistNotFound = errors.New("artist not found")
-
 func getData(link string) (result []byte, err error) {
 	response, err := http.Get(link)
 	if err != nil {
@@ -93,6 +100,35 @@ func getData(link string) (result []byte, err error) {
 		return
 	}
 	return result, nil
+}
+
+func normalizeLocation(location string) string {
+	split := strings.Split(location, "-")
+	if len(split) != 2 {
+		return location
+	}
+	city, country := split[0], split[1]
+	fix := func(s string) string {
+		return strings.ReplaceAll(s, "_", " ")
+	}
+	city, country = fix(city), fix(country)
+	city = capitalize(city)
+	country = capitalize(country)
+	switch strings.ToLower(country) {
+	case "usa", "uk":
+		country = strings.ToUpper(country)
+	default:
+		country = strings.Title(country)
+	}
+	return city + " - " + country
+}
+
+func capitalize(str string) string {
+	split := strings.Split(str, " ")
+	for i, s := range split {
+		split[i] = strings.Title(s)
+	}
+	return strings.Join(split, " ")
 }
 
 type Artist struct {
@@ -122,3 +158,6 @@ type Relation struct {
 type HasAPI interface {
 	Artist | ArtistLocations | ArtistDates | Relation | []Artist
 }
+
+var ErrUnsupportedAPI = errors.New("unsupported type of api call")
+var ErrArtistNotFound = errors.New("artist not found")

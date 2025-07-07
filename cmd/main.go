@@ -1,25 +1,16 @@
 package main
 
 import (
-	"groupie-tracker/internal/handlers"
 	"groupie-tracker/internal/helpers"
+	"groupie-tracker/internal/server"
 	"log"
-	"net/http"
 )
 
 func main() {
 	if err := helpers.ChangeDirProjectRoot(); err != nil {
 		log.Fatal(err)
 	}
-	fs := http.FileServer(http.Dir("frontend/static"))
-	http.HandleFunc("/", handlers.HandleHome)
-	http.HandleFunc("/artist/", handlers.HandleArtist)
-	http.Handle("/static/", http.StripPrefix("/static/", fs))
-	log.Println("Starting server at", link+port)
-	err := http.ListenAndServe(port, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
+	server.Init(link, port)
 }
 
 const port = ":8080"
