@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 )
 
-var ErrGoModNotFound = errors.New("go.mod not found")
+var ErrRootDirNotFound = errors.New("could not find project root directory")
 
 func ChangeDirProjectRoot() error {
 	for {
@@ -19,7 +19,7 @@ func ChangeDirProjectRoot() error {
 		}
 		parent := filepath.Dir(dir)
 		if parent == dir {
-			return ErrGoModNotFound
+			return ErrRootDirNotFound
 		}
 		if err := os.Chdir(parent); err != nil {
 			return err
